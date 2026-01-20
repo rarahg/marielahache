@@ -1,0 +1,60 @@
+name: Deploy static content to Pages
+
+on:
+  push:
+    branches: ['main']
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: 'pages'
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 21
+          cache: 'pnpm'
+      - name: Install dependencies
+        run: pnpm install
+      - uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/.next/cache
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx', '**/*.mdx', '**/*.md') }}
+          restore-keys: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v4
+      - name: Build
+        run: pnpm run build
+        env:
+          AIRTABLE_TOKEN: ${{ secrets.AIRTABLE_TOKEN }}
+          VITE_GITHUB_REPOSITORY: ${{ github.repository }}
+          VITE_BASE_URL: ${{ steps.pages.outputs.base_url }}
+          VITE_BASE_PATH: ${{ steps.pages.outputs.base_path }}
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Upload entire repository
+          path: './dist/public'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

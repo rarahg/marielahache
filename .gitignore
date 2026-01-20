@@ -1,0 +1,12 @@
+coverage
+node_modules
+dist
+.env*
+*.tsbuildinfo
+.cache
+.eslintcache
+.turbo
+.DS_Store
+*.pem
+public/gen
+.env
