@@ -28,7 +28,7 @@ export async function PageTemplate({ slug }: { slug: string }) {
 	return (
 		<Col style={styles.readable}>
 			<H1>{title}</H1>
-			<Carousel alt={title} images={images} />
+			<Carousel key={slug} alt={title} images={images} />
 			<MD>{contents}</MD>
 			{slug === blog && <Articles />}
 		</Col>
