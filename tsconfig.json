@@ -5,7 +5,6 @@
 		"noEmit": true,
 		"isolatedModules": true,
 		"moduleDetection": "force",
-		"downlevelIteration": true,
 		"esModuleInterop": true,
 		"module": "esnext",
 		"types": ["vitest/importMeta", "vitest/globals"],
@@ -15,7 +14,6 @@
 		"exactOptionalPropertyTypes": true,
 		"jsx": "react-jsx",
 		"allowJs": true,
-		"baseUrl": ".",
 		"paths": {
 			"@/*": ["./src/*"]
 		}
