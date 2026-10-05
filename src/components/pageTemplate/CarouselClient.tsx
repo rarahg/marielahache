@@ -49,7 +49,7 @@ export function CarouselClient({ images }: { images: ResponsiveImage[] }) {
 		if (next >= images.length) return next - images.length
 		return next
 	}
-	const image = images[index]
+	const image = images[index] ?? images[0]
 	if (!image) throw new Error('No image')
 
 	const many = images.length > 1
